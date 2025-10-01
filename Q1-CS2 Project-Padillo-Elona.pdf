@@ -22,7 +22,7 @@ IV. Planned Features
       Inputs: Subject, Quarter, Previous Grade, Target Grade, Assessments, Assessment Scores
       Outputs: Quarter Grade (Final Grade in case 4th Quarter), Target Score per Assessment, Study Guide (if accessed by the user or substandard quarter grade)
   VI.  Logic Plan (in Pseudocode)
-START PROGRAM
+START 
 
 PROCEDURE CreateStudent
     INPUT student_name
@@ -104,7 +104,7 @@ MAIN_LOOP
     IF choice=5 THEN CALL ViewReport
     IF choice=6 THEN EXIT
 
-END PROGRAM
+END 
 
 
           
