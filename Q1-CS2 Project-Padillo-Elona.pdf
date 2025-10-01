@@ -1,0 +1,116 @@
+I. Project Title
+    Study Buddy
+    II. Problem Statement
+      Many students nowadays often forget or disregard their academic standing. This can be due to many reasons
+      such as lack of study material resources or just purely not keeping track. This project aims to solve that
+      by providing a reliable way to constantly keep ourselvesinformed of our grades and at the same time provide 
+      resources to help either maintaining or improving our standing
+III. Project Objectives
+      - Provide a customizable, reliable, academic tracker that can take in multiple factors such as formative and
+        summative assessments and calculate your grade. It hopefully will also be able to estimate a score required
+        to meet the grade you want
+      - Be able to provide reliable sources sourced from files on one’s computer and be able to sort out relevant 
+        information 
+IV. Planned Features
+      - A customizable per subject academic tracker in which the user can input the number of activities and their
+        scores, calculate their grade using the standard PSHS Grading System of the new curriculum, be able to input
+        a target grade which will help the program analyze the minimum required score per assessment needed to achieve
+        that grade
+      - A “study buddy” which would be recommended to the user in the situation where the grade is substandard. It can 
+        also be accessed upon the users request and be accessed through specific computer folders
+  V. Planned Inputs and Outputs
+      Inputs: Subject, Quarter, Previous Grade, Target Grade, Assessments, Assessment Scores
+      Outputs: Quarter Grade (Final Grade in case 4th Quarter), Target Score per Assessment, Study Guide (if accessed by the user or substandard quarter grade)
+  VI.  Logic Plan (in Pseudocode)
+START PROGRAM
+
+PROCEDURE CreateStudent
+    INPUT student_name
+    INPUT plan_type
+    CREATE student_account
+    ADD to student_accounts
+    SET active_student
+
+PROCEDURE SwitchStudent
+    DISPLAY student_accounts
+    INPUT selection
+    SET active_student
+
+PROCEDURE AddSubject
+    INPUT subject_name
+    INPUT quarter
+    IF quarter > 1 THEN INPUT previous_grade
+    INPUT target_grade
+    INPUT formative_done, formative_total, formative_remaining
+    INPUT summative_done, summative_total, summative_remaining
+    CREATE subject_record
+    ADD to active_student.subjects
+    SET active_subject
+
+PROCEDURE SwitchSubject
+    DISPLAY active_student.subjects
+    INPUT selection
+    SET active_subject
+
+PROCEDURE CalculateRawGrade(formative_done, formative_total, summative_done, summative_total)
+    formative_percent = formative_done / formative_total
+    summative_percent = summative_done / summative_total
+    RETURN (formative_percent * 0.30) + (summative_percent * 0.70)
+
+PROCEDURE AdjustForQuarter(raw_grade, previous_grade, quarter)
+    IF quarter > 1 THEN
+        RETURN (previous_grade * 1/3) + (raw_grade * 2/3)
+    ELSE
+        RETURN raw_grade
+    ENDIF
+
+PROCEDURE ConvertGrade(percentage)
+    LOOKUP percentage in conversion_chart
+    RETURN final_grade
+
+PROCEDURE CheckTarget(quarter_grade, target_grade, formative_remaining, summative_remaining)
+    CALCULATE maximum_possible = quarter_grade + (remaining_full_scores)
+    IF target_grade <= maximum_possible THEN
+        CALCULATE required_scores
+        RETURN "Achievable", required_scores
+    ELSE
+        RETURN "Not Achievable", maximum_possible
+    ENDIF
+
+PROCEDURE CalculateYearlyGrade(all_quarters)
+    RETURN AVERAGE(all_quarters)
+
+PROCEDURE CalculateGrade
+    raw_grade = CalculateRawGrade(formative_done, formative_total, summative_done, summative_total)
+    quarter_grade = AdjustForQuarter(raw_grade, previous_grade, quarter)
+    final_grade = ConvertGrade(quarter_grade)
+    IF plan_type = Yearly THEN
+        yearly_grade = CalculateYearlyGrade(all_quarters)
+    ENDIF
+    status, info = CheckTarget(quarter_grade, target_grade, formative_remaining, summative_remaining)
+    RETURN quarter_grade, final_grade, status, info
+
+PROCEDURE ViewReport
+    quarter_grade, final_grade, status, info = CalculateGrade
+    DISPLAY quarter_grade, final_grade, status, info
+
+MAIN_LOOP
+    DISPLAY MENU
+    INPUT choice
+    IF choice=1 THEN CALL CreateStudent
+    IF choice=2 THEN CALL SwitchStudent
+    IF choice=3 THEN CALL AddSubject
+    IF choice=4 THEN CALL SwitchSubject
+    IF choice=5 THEN CALL ViewReport
+    IF choice=6 THEN EXIT
+
+END PROGRAM
+
+
+          
+
+  VII. GitHub Repository Link
+        https://github.com/zpadillo2/Grade 8 Project.git
+
+
+
