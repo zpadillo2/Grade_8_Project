@@ -5,19 +5,16 @@ I. Project Title
       such as lack of study material resources or just purely not keeping track. This project aims to solve that
       by providing a reliable way to constantly keep ourselvesinformed of our grades and at the same time provide 
       resources to help either maintaining or improving our standing
-III. Project Objectives
-      - Provide a customizable, reliable, academic tracker that can take in multiple factors such as formative and
-        summative assessments and calculate your grade. It hopefully will also be able to estimate a score required
-        to meet the grade you want
-      - Be able to provide reliable sources sourced from files on one’s computer and be able to sort out relevant 
-        information 
+III. Project Objectives (SMART OBJECTIVES)
+     Specific: Get students grades up while helping them learn
+     Measurable: Project success measured via the grades on the card
+     Attainable: This project is attainable via inspiration from similar systems to help code
+     Relevant: Connected to the larger goal of increasing the average grade of students
+     Time-Bounded: Target Completion by April-May, 2026
 IV. Planned Features
-      - A customizable per subject academic tracker in which the user can input the number of activities and their
-        scores, calculate their grade using the standard PSHS Grading System of the new curriculum, be able to input
-        a target grade which will help the program analyze the minimum required score per assessment needed to achieve
-        that grade
-      - A “study buddy” which would be recommended to the user in the situation where the grade is substandard. It can 
-        also be accessed upon the users request and be accessed through specific computer folders
+      Study Buddy: An academic tracker with multiple customizable options (e.g. grade track play (quarter or year), subject or overall (subject is selectable),
+                   target grade, grade display (in the 1.0-5.0 format or 60-100?), and assessment numbers (how many summative and formative assessments available and their scores)
+      AI Helper: Used eitheer when requested by the user or if the user has a substandard grade and is used to help the user better understand the lesson
   V. Planned Inputs and Outputs
       Inputs: Subject, Quarter, Previous Grade, Target Grade, Assessments, Assessment Scores
       Outputs: Quarter Grade (Final Grade in case 4th Quarter), Target Score per Assessment, Study Guide (if accessed by the user or substandard quarter grade)
