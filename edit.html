@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Record</title>
+    <style>
+        body { 
+            text-align: center; padding-top: 50px; font-family: system-ui; min-height: 100vh;
+            background: linear-gradient(180deg, #ffffff, #87ceeb, #ffffff, #87ceeb);
+            background-size: 100% 400%; animation: waveDown 5s ease infinite;
+        }
+        @keyframes waveDown { 0% { background-position: 50% 0%; } 50% { background-position: 50% 100%; } 100% { background-position: 50% 0%; } }
+        .edit-box { background: white; padding: 40px; display: inline-block; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        input { padding: 12px; margin: 10px; width: 250px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; }
+        button { padding: 12px 25px; background: rgb(41, 126, 201); color: white; border: none; border-radius: 25px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="edit-box">
+        <h2>Update Past Record</h2>
+        <form method="POST">
+            <p>Subject Name: <br><input type="text" name="subject" value="{{ record.subject }}"></p>
+            <p>Grade Percentage: <br><input type="number" step="0.01" name="grade" value="{{ record.grade }}"></p>
+            <p>Target Percentage: <br><input type="number" step="0.01" name="target" value="{{ record.target }}"></p>
+            <button type="submit">Update Record</button>
+            <br><a href="{{ url_for('calculator_page') }}" style="display:block; margin-top:20px; color:gray; text-decoration:none;">Back to Calculator</a>
+        </form>
+    </div>
+</body>
+</html>

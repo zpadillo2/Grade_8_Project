@@ -1,0 +1,8 @@
+An algebraic equation is a mathematical statement asserting that two algebraic expressions are equal, joined by an equal sign (
+). Unlike an expression, which is a phrase, an equation is a complete sentence representing a balanced relationship between two 
+quantities. It generally consists of variables (letters representing unknown values), 
+coefficients (numbers multiplying variables), and constants (fixed numbers). The goal 
+when working with these equations is to "solve" them, which means finding the specific 
+value of the variable that makes the equation true. To maintain this balance, any operation 
+applied—addition, subtraction, multiplication, or division—must be performed on both sides 
+of the equation.

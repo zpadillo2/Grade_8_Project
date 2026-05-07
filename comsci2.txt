@@ -1,0 +1,9 @@
+Computer science is the study of computation, information, and 
+automation, encompassing both theoretical foundations and practical 
+applications in software and hardware development. It involves designing
+ algorithms, analyzing data, and developing software systems to solve complex
+problems. Core disciplines include artificial intelligence, software engineering, 
+operating systems, and computer graphics. 
+Michigan Technological University
+Michigan Technological University
+ 

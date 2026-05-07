@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grade Calculator</title>
+</head>
+<style>
+    body {
+      margin: 0;
+      text-align: center;
+      padding-top: 50px;
+      font-family: system-ui;
+      min-height: 100vh;
+
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      
+      background: linear-gradient(-45deg, #ffffff, #87ceeb, #ffffff, #87ceeb);
+      background-size: 400% 400%;
+      
+      animation: gradientBG 5s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    button {
+        padding: 15px 30px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        background-color: rgb(41, 126, 201);
+        color: rgb(0, 0, 0);
+        border: none;
+        border-radius: 35px;
+        transition: all 0.25s ease;
+    }
+
+    button:hover {
+        background-color: white;
+        color: rgb(41, 126, 201);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
+                    0 0 40px rgba(41, 126, 201);
+        transform: scale(1.05);
+    }
+  </style>
+<body>
+    <h1>Grade Calculator</h1>
+    <p>Our website has it's limitations. Therefore we want to inform you about its uses before you enter the website.</p>
+    <div style="margin-bottom: 20px; font-family: system-ui;">
+        <div>- It calculates a student's grades in subjects using the PSHSS Grading system</div>
+        <div>- It provides text notes depending on the grade level of the student</div>
+        <div>- The calculator only takes into account the SUMMATIVE and FORMATIVE assessments</div>
+        <div>- The calculator is primarily for STEM subjects, therefore it  only gives STEM options</div>
+    </div>
+
+    <div style="margin-bottom: 20px; font-family: system-ui;">
+        Click the button below to use the website:
+    </div>
+
+    <form method="POST">
+        <button class="button" type="submit" name="agreement" value="yes" style="height: 100px; width: 185px; background-color: rgba(255, 255, 255, 0.8);">Enter Website</button>
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grade Calculator</title>
+    <style>
+        body {
+            text-align: center; padding-top: 50px; font-family: system-ui; min-height: 100vh;
+            background: linear-gradient(180deg, #ffffff, #87ceeb, #ffffff, #87ceeb);
+            background-size: 100% 400%; animation: waveDown 5s ease infinite;
+        }
+        @keyframes waveDown { 0% { background-position: 50% 0%; } 50% { background-position: 50% 100%; } 100% { background-position: 50% 0%; } }
+        
+        button {
+            padding: 15px 30px; font-size: 1.2rem; cursor: pointer;
+            background-color: rgb(41, 126, 201); color: white; border: none;
+            border-radius: 35px; transition: all 0.25s ease; margin-bottom: 20px;
+        }
+        button:hover {
+            background-color: white; color: rgb(41, 126, 201);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(41, 126, 201);
+            transform: scale(1.05);
+        }
+        
+        .history-container {
+            margin: 50px auto; max-width: 800px;
+            background: rgba(255, 255, 255, 0.9); padding: 20px;
+            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; }
+        .delete-btn { color: #ff4d4d; text-decoration: none; font-weight: bold; }
+        .edit-btn { color: #297ec9; text-decoration: none; font-weight: bold; margin-right: 15px; }
+        .q-label { font-weight: bold; color: rgb(41, 126, 201); margin-top: 40px; display: block; font-size: 1.3em; }
+        
+        .notes-link {
+            color: #ffbb00; font-weight: bold; text-decoration: none;
+            display: inline-block; margin-top: 15px;
+        }
+        .notes-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Grade Calculator</h1>
+
+    <form method="GET">
+        <h3>Select Grade Level:</h3>
+        <select name="grade" onchange="this.form.submit()" style="padding: 10px; border-radius: 5px; cursor: pointer;">
+            <option value="">-- Choose Grade --</option>
+            {% for g in ['7','8','9','10','11','12'] %}
+                <option value="{{ g }}" {% if grade == g %}selected{% endif %}>Grade {{ g }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% if subjects %}
+        <form method="POST" onsubmit="return validateWeights()">
+            <h3>Plan Type:</h3>
+            <select name="plan_type" id="plan_type" onchange="handleYearlyUI()" style="padding: 10px; border-radius: 5px; cursor: pointer; margin-bottom: 20px;">
+                <option value="quarterly">Quarterly</option>
+                <option value="yearly">Yearly</option>
+            </select>
+
+            <h3>Select Subject:</h3>
+            <select name="chosen_subject" style="padding: 10px; border-radius: 5px; cursor: pointer; margin-bottom: 20px;">
+                {% for sub in subjects %}<option value="{{ sub }}">{{ sub }}</option>{% endfor %}
+            </select>
+
+            <div id="calculator-fields">
+                <div class="iteration-block" id="block-1">
+                    <span class="q-label" id="label-1" style="display:none;">Quarter 1</span>
+                    <h3>Summative (Weight: <input type="number" name="summ_weight" id="sw1" value="80" style="width:40px;" oninput="syncWeights()">%)</h3>
+                    <div id="summ-box-1">
+                        <p>Score: <input type="number" name="s_scores[]" style="width: 60px;"> / Total: <input type="number" name="s_totals[]" style="width: 60px;"></p>
+                    </div>
+                    <button type="button" onclick="addScore('summ-box-1', 's_scores[]', 's_totals[]')">+ Add Summative Assessment</button>
+
+                    <h3>Formative (Weight: <input type="number" name="form_weight" id="fw1" value="20" style="width:40px;" oninput="syncWeights()">%)</h3>
+                    <div id="form-box-1">
+                        <p>Score: <input type="number" name="f_scores[]" style="width: 60px;"> / Total: <input type="number" name="f_totals[]" style="width: 60px;"></p>
+                    </div>
+                    <button type="button" onclick="addScore('form-box-1', 'f_scores[]', 'f_totals[]')">+ Add Formative Assessment</button>
+
+                    <p>Future Pts Left (Sum): <input type="number" name="rem_summ" value="0" style="width: 50px;"> (Form): <input type="number" name="rem_form" value="0" style="width: 50px;"></p>
+                    <hr style="width:60%; border: 0.5px solid #bddcf5; margin: 30px auto;">
+                </div>
+                <div id="extra-quarters"></div>
+            </div>
+
+            <div style="background: rgba(220, 240, 255, 0.6); padding: 20px; border-radius: 10px; margin: 20px auto; max-width: 450px;">
+                <p><strong>Target Grade %:</strong> <input type="number" name="target_grade" value="90" style="width: 60px;" required>%</p>
+            </div>
+
+            <button type="submit" style="background: white; color: black; font-weight: bold;">Calculate & Save</button>
+        </form>
+    {% endif %}
+
+    {% if result %}
+        <div style="margin-top: 30px; padding: 25px; border: 3px solid #5bbad5; display: inline-block; background: white; border-radius: 15px; min-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <h2 style="margin-bottom: 10px;">Results for {{ result.subject }}</h2>
+            <p style="font-size: 1.5em; margin-bottom: 20px;">Current Grade: <strong>{{ result.grade }}%</strong></p>
+
+            {% if result.grade >= result.target %}
+                <h3 style="color: green; margin-bottom: 5px;">Target Grade Reached! 🎉</h3>
+            {% elif result.max < result.target %}
+                <h3 style="color: red; font-weight: bold; margin-bottom: 5px;">FAILED: Goal impossible. Max possible is {{ result.max }}%</h3>
+            {% else %}
+                <p style="margin-bottom: 10px;">To hit {{ result.target }}%, you need at least:</p>
+                <ul style="list-style: none; padding: 0; margin-bottom: 10px;">
+                    <li>🎯 <strong>{{ result.req_s }}</strong> more Summative points</li>
+                    <li>🎯 <strong>{{ result.req_f }}</strong> more Formative points</li>
+                </ul>
+            {% endif %}
+            <p style="font-size: 0.8em; color: gray; margin-top: 15px; border-top: 1px solid #f0f0f0; padding-top: 10px;"><i>Functions by Z. Padillo</i></p>
+        </div>
+        <br>
+        {% if result.notes %}
+            <a href="{{ url_for('static', filename=result.notes) }}" target="_blank" class="notes-link">📖 View {{ result.subject }} Notes</a>
+        {% endif %}
+    {% endif %}
+
+    <div class="history-container">
+        <h2>Past Calculations</h2>
+        <table>
+            <thead><tr><th>Subject</th><th>Plan</th><th>Grade</th><th>Target</th><th>Action</th></tr></thead>
+            <tbody>
+                {% for entry in history %}
+                <tr>
+                    <td>{{ entry.subject }}</td>
+                    <td>{{ entry.mode | capitalize }}</td>
+                    <td>{{ entry.grade }}%</td>
+                    <!-- FIXED: Added Target column data -->
+                    <td>{{ entry.target }}%</td>
+                    <td>
+                        <a href="{{ url_for('edit_grade', id=entry.id) }}" class="edit-btn">Edit</a>
+                        <a href="{{ url_for('delete_grade', id=entry.id) }}" class="delete-btn" onclick="return confirm('Delete?')">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+    function syncWeights() {
+        const plan = document.getElementById("plan_type").value;
+        if (plan === "yearly") {
+            const sVal = document.getElementById("sw1").value;
+            const fVal = document.getElementById("fw1").value;
+            for (let i = 2; i <= 4; i++) {
+                const sInputs = document.getElementsByName("summ_weight_q" + i);
+                const fInputs = document.getElementsByName("form_weight_q" + i);
+                sInputs.forEach(el => el.value = sVal);
+                fInputs.forEach(el => el.value = fVal);
+            }
+        }
+    }
+
+    function validateWeights() {
+        const sw = parseFloat(document.getElementById("sw1").value) || 0;
+        const fw = parseFloat(document.getElementById("fw1").value) || 0;
+        if ((sw + fw) !== 100) {
+            alert("⚠️ Warning: Weights must equal exactly 100%! (Currently: " + (sw + fw) + "%)");
+            return false;
+        }
+        return true;
+    }
+
+    function addScore(containerId, sName, tName) {
+        const container = document.getElementById(containerId);
+        const div = document.createElement('p');
+        div.innerHTML = `Score: <input type="number" name="${sName}" style="width: 60px;"> / Total: <input type="number" name="${tName}" style="width: 60px;">`;
+        container.appendChild(div);
+    }
+
+    function handleYearlyUI() {
+        const plan = document.getElementById("plan_type").value;
+        const extraDiv = document.getElementById("extra-quarters");
+        const q1Label = document.getElementById("label-1");
+        
+        if (plan === "yearly") {
+            q1Label.style.display = "block";
+            let html = "";
+            for (let i = 2; i <= 4; i++) {
+                html += `
+                <div class="iteration-block">
+                    <span class="q-label">Quarter ${i}</span>
+                    <h3>Summative (Weight: <input type="number" name="summ_weight_q${i}" value="${document.getElementById('sw1').value}" style="width:40px;" readonly>%)</h3>
+                    <div id="summ-box-${i}">
+                        <p>Score: <input type="number" name="s_scores_q${i}[]" style="width: 60px;"> / Total: <input type="number" name="s_totals_q${i}[]" style="width: 60px;"></p>
+                    </div>
+                    <button type="button" onclick="addScore('summ-box-${i}', 's_scores_q${i}[]', 's_totals_q${i}[]')">+ Add Summative Assessment</button>
+                    <h3>Formative (Weight: <input type="number" name="form_weight_q${i}" value="${document.getElementById('fw1').value}" style="width:40px;" readonly>%)</h3>
+                    <div id="form-box-${i}">
+                        <p>Score: <input type="number" name="f_scores_q${i}[]" style="width: 60px;"> / Total: <input type="number" name="f_totals_q${i}[]" style="width: 60px;"></p>
+                    </div>
+                    <button type="button" onclick="addScore('form-box-${i}', 'f_scores_q${i}[]', 'f_totals_q${i}[]')">+ Add Formative Assessment</button>
+                    <p>Future Pts Left (S): <input type="number" name="rem_summ_q${i}" value="0" style="width: 50px;"> (F): <input type="number" name="rem_form_q${i}" value="0" style="width: 50px;"></p>
+                    <hr style="width:60%; border: 0.5px solid #bddcf5; margin: 30px auto;">
+                </div>`;
+            }
+            extraDiv.innerHTML = html;
+        } else {
+            q1Label.style.display = "none";
+            extraDiv.innerHTML = "";
+        }
+    }
+    </script>
+</body>
+</html>
